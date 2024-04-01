@@ -42,10 +42,12 @@ export class AppComponent implements OnInit {
   setDynamicTitle() {
     this.setTitle('Task');
   }
-
-  range(start: number, end: number): number[] {
-    return Array(end - start + 1)
-      .fill(0)
-      .map((_, idx) => start + idx);
+  next() {
+    this.index++;
+    this.pagination_userdata = this.userdata[this.index];
+  }
+  previous() {
+    this.index--;
+    this.pagination_userdata = this.userdata[this.index];
   }
 }

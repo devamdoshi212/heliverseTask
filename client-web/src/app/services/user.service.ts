@@ -19,11 +19,11 @@ export class UserService {
         console.log(data);
         this.userdata = data;
         this.length = data.length;
-        return this.splitUserData(20); // Splitting into chunks of 20 users
+        return this.splitUserData(20);
       })
       .catch((error) => {
         console.error('There was a problem fetching the data:', error);
-        return []; // Return an empty array in case of error
+        return [];
       });
   };
 
