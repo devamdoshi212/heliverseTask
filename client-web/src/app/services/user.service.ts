@@ -21,6 +21,20 @@ export class UserService {
       })
     );
   }
+  fetchUserDataBySearchName(keyword: string): Observable<any[][]> {
+    return this.http.getData('./../assets/heliverse_mock_data.json').pipe(
+      map((data) => {
+        return data.filter((person: any) =>
+          person.first_name.toLowerCase().includes(keyword.toLowerCase())
+        );
+      }),
+      map((data) => {
+        this.userdata = data;
+        this.length = data.length;
+        return this.splitUserData(20);
+      })
+    );
+  }
 
   splitUserData = (chunkSize: number): user[][] => {
     const numberOfChunks = Math.ceil(this.userdata.length / chunkSize);
