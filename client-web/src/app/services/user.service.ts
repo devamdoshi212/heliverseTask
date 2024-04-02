@@ -8,6 +8,9 @@ import { Injectable } from '@angular/core';
 })
 export class UserService {
   userdata: user[] = [];
+  domains: any[] = [];
+  gender: any[] = [];
+  available: any[] = [];
   length: any = 0;
 
   constructor(private http: MyHttpService) {}
@@ -17,6 +20,9 @@ export class UserService {
       map((data) => {
         this.userdata = data;
         this.length = data.length;
+        this.domains = [...new Set(data.map((item: any) => item.domain))];
+        this.gender = [...new Set(data.map((item: any) => item.gender))];
+        this.available = [...new Set(data.map((item: any) => item.available))];
         return this.splitUserData(20);
       })
     );
