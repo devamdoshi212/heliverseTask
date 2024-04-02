@@ -10,12 +10,13 @@ import { MyHttpService } from '../../services/http.service';
 })
 export class HomeComponent implements OnInit {
   userdata: user[][] = [];
-  length: any = 0;
-  index: any = 0;
-  paginationLength: any = 0;
-  pagination_userdata: user[] = [];
-  filtered_userdata: user[] = [];
+  length: number = 0;
+  index: number = 0;
+  paginationLength: number = 0;
+  paginationUserdata: user[] = [];
+  filteredUserdata: user[] = [];
   searchKeyword: string = '';
+
   constructor(private title: Title, private userService: UserService) {
     this.setDynamicTitle();
   }
@@ -23,16 +24,15 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.userService.fetchUserData().subscribe((data: user[][]) => {
       this.userdata = data;
-      this.pagination_userdata = this.userdata[this.index];
-      this.filtered_userdata = this.userdata[this.index];
-      this.length = this.userService.length;
-      this.paginationLength = this.userService.length / 20;
+      this.updatePaginationData();
     });
   }
-  setPaginatedData(index: any) {
-    this.index = index;
-    this.filtered_userdata = this.userdata[index];
-    this.pagination_userdata = this.userdata[index];
+
+  setPaginatedData(index: number) {
+    if (index >= 0 && index < this.userdata.length) {
+      this.index = index;
+      this.updatePaginationData();
+    }
   }
 
   setTitle(newTitle: string) {
@@ -42,26 +42,35 @@ export class HomeComponent implements OnInit {
   setDynamicTitle() {
     this.setTitle('Home');
   }
+
   next() {
-    this.index++;
-    this.filtered_userdata = this.userdata[this.index];
-    this.pagination_userdata = this.userdata[this.index];
+    if (this.index < this.userdata.length - 1) {
+      this.index++;
+      this.updatePaginationData();
+    }
   }
+
   previous() {
-    this.index--;
-    this.filtered_userdata = this.userdata[this.index];
-    this.pagination_userdata = this.userdata[this.index];
+    if (this.index > 0) {
+      this.index--;
+      this.updatePaginationData();
+    }
   }
+
   searchByName(keyword: string) {
     this.userService
       .fetchUserDataBySearchName(keyword)
       .subscribe((data: user[][]) => {
         this.userdata = data;
         this.index = 0;
-        this.pagination_userdata = this.userdata[this.index];
-        this.filtered_userdata = this.userdata[this.index];
-        this.length = this.userService.length;
-        this.paginationLength = this.userService.length / 20;
+        this.updatePaginationData();
       });
+  }
+
+  private updatePaginationData() {
+    this.filteredUserdata = this.userdata[this.index];
+    this.paginationUserdata = this.userdata[this.index];
+    this.length = this.userService.length;
+    this.paginationLength = this.userService.length / 20;
   }
 }

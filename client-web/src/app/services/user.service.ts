@@ -9,9 +9,9 @@ import { Injectable } from '@angular/core';
 export class UserService {
   userdata: user[] = [];
   length: any = 0;
-  chunks: user[][] = [];
 
   constructor(private http: MyHttpService) {}
+
   fetchUserData(): Observable<any[][]> {
     return this.http.getData('./../assets/heliverse_mock_data.json').pipe(
       map((data) => {
@@ -21,6 +21,7 @@ export class UserService {
       })
     );
   }
+
   fetchUserDataBySearchName(keyword: string): Observable<any[][]> {
     return this.http.getData('./../assets/heliverse_mock_data.json').pipe(
       map((data) => {
@@ -36,13 +37,14 @@ export class UserService {
     );
   }
 
-  splitUserData = (chunkSize: number): user[][] => {
+  private splitUserData = (chunkSize: number): user[][] => {
+    const chunks: user[][] = [];
     const numberOfChunks = Math.ceil(this.userdata.length / chunkSize);
     for (let i = 0; i < numberOfChunks; i++) {
       const start = i * chunkSize;
       const end = start + chunkSize;
-      this.chunks.push(this.userdata.slice(start, end));
+      chunks.push(this.userdata.slice(start, end));
     }
-    return this.chunks;
+    return chunks;
   };
 }
