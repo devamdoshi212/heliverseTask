@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UserService } from '../../services/user.service';
 import { user } from '../../model/user.model';
-import { MyHttpService } from '../../services/http.service';
-import { TypeofExpr } from '@angular/compiler';
 
 @Component({
   selector: 'app-home',
@@ -19,17 +17,19 @@ export class HomeComponent implements OnInit {
   filteredUserData: user[] = [];
   domains: string[] = [];
   genders: string[] = [];
-
+  teamCount: Number = 0;
   searchKeyword: string = '';
   availabilityFilter: any = '';
   selectedDomain: string = '';
   selectedGender: string = '';
-
+  showError: boolean = false;
+  error: string = '';
   constructor(private title: Title, private userService: UserService) {
     this.setDynamicTitle();
   }
 
   ngOnInit(): void {
+    this.teamCount = this.userService.teamData.length;
     this.userService.fetchUserData().subscribe((data: user[]) => {
       this.domains = this.userService.domains;
       this.genders = this.userService.genders;
@@ -95,5 +95,16 @@ export class HomeComponent implements OnInit {
       startIndex + this.itemsPerPage
     );
     this.paginationLength = this.paginationUserdata.length;
+  }
+
+  setTeamCount(data: Number) {
+    this.teamCount = data;
+  }
+  setError(data: string) {
+    this.error = data;
+    this.showError = true;
+  }
+  closeError() {
+    this.showError = false;
   }
 }

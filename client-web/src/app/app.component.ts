@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component } from '@angular/core';
 import { UserService } from './services/user.service';
-import { user } from './model/user.model';
-import { MyHttpService } from './services/http.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(private userService: UserService) {}
+}

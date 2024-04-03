@@ -6,6 +6,14 @@ import { user } from '../../model/user.model';
   templateUrl: './team-home.component.html',
 })
 export class TeamHomeComponent implements OnInit {
+  teamData: user[] = [];
   constructor(private userService: UserService) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.teamData = this.userService.teamData;
+  }
+
+  setTeamDataAfterRemove(data: user[]) {
+    this.teamData = data;
+    this.userService.teamData = data;
+  }
 }

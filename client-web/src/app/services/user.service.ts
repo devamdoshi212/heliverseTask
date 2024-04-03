@@ -13,6 +13,7 @@ export class UserService {
   available: string[] = [];
   length: Number = 0;
 
+  teamData: user[] = [];
   constructor(private http: MyHttpService) {}
 
   fetchUserData(): Observable<user[]> {
@@ -33,4 +34,10 @@ export class UserService {
       })
     );
   }
+
+  addTeamMember(member: user) {
+    this.teamData.push(member);
+    console.log(this.teamData);
+  }
+  removeTeamMember(member: user) {}
 }

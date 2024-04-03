@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './routing.module';
 import { HomeComponent } from './components/home/home.component';
+import { TeamHomeComponent } from './components/team-home/team-home.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { HomeComponent } from './components/home/home.component';
     HeaderComponent,
     FooterComponent,
     HomeComponent,
+    TeamHomeComponent,
   ],
   imports: [
     AppRoutingModule,

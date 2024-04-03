@@ -27,14 +27,34 @@
     <span class="text-sm text-gray-500 dark:text-gray-400">{{
       userdata.email
     }}</span>
-    <div class="flex mt-4 md:mt-6">
+    <div class="flex mt-4 md:mt-6" *ngIf="valid; else selected">
       <button
         [disabled]="!userdata.available"
         [ngClass]="{ 'bg-gray-500': !userdata.available }"
+        (click)="addToTeam(userdata)"
         class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
       >
         {{ userdata.available ? "Add to Team" : "Not Available" }}
       </button>
     </div>
+    <ng-template #selected>
+      <div *ngIf="!flag" class="flex mt-4 md:mt-6">
+        <div
+          [ngClass]="{ 'bg-gray-500': !userdata.available }"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
+        >
+          {{ "Selected" }}
+        </div>
+      </div>
+      <div *ngIf="flag" class="flex mt-4 md:mt-6">
+        <button
+          (click)="removeToTeam(userdata)"
+          [ngClass]="{ 'bg-gray-500': !userdata.available }"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
+        >
+          {{ "Remove" }}
+        </button>
+      </div>
+    </ng-template>
   </div>
 </div>
