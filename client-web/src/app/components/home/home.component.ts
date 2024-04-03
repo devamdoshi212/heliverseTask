@@ -3,36 +3,39 @@ import { Title } from '@angular/platform-browser';
 import { UserService } from '../../services/user.service';
 import { user } from '../../model/user.model';
 import { MyHttpService } from '../../services/http.service';
+import { TypeofExpr } from '@angular/compiler';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  userdata: user[][] = [];
+  userdata: user[] = [];
   length: number = 0;
   index: number = 0;
   paginationLength: number = 0;
   paginationUserdata: user[] = [];
-  filteredUserdata: user[] = [];
+  itemsPerPage: number = 20;
+  filteredUserData: user[] = [];
+  domains: string[] = [];
+  genders: string[] = [];
+
   searchKeyword: string = '';
+  availabilityFilter: any = '';
+  selectedDomain: string = '';
+  selectedGender: string = '';
 
   constructor(private title: Title, private userService: UserService) {
     this.setDynamicTitle();
   }
 
   ngOnInit(): void {
-    this.userService.fetchUserData().subscribe((data: user[][]) => {
+    this.userService.fetchUserData().subscribe((data: user[]) => {
+      this.domains = this.userService.domains;
+      this.genders = this.userService.genders;
       this.userdata = data;
-      this.updatePaginationData();
+      this.filter();
     });
-  }
-
-  setPaginatedData(index: number) {
-    if (index >= 0 && index < this.userdata.length) {
-      this.index = index;
-      this.updatePaginationData();
-    }
   }
 
   setTitle(newTitle: string) {
@@ -44,7 +47,10 @@ export class HomeComponent implements OnInit {
   }
 
   next() {
-    if (this.index < this.userdata.length - 1) {
+    if (
+      this.index * this.itemsPerPage + this.itemsPerPage <
+      this.filteredUserData.length - 1
+    ) {
       this.index++;
       this.updatePaginationData();
     }
@@ -57,20 +63,37 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  searchByName(keyword: string) {
-    this.userService
-      .fetchUserDataBySearchName(keyword)
-      .subscribe((data: user[][]) => {
-        this.userdata = data;
-        this.index = 0;
-        this.updatePaginationData();
-      });
+  filter() {
+    console.log(this.availabilityFilter);
+    this.index = 0;
+    this.filteredUserData = this.userdata.filter((person: any) => {
+      return (
+        (!this.searchKeyword ||
+          person.first_name.includes(this.searchKeyword)) &&
+        (!this.selectedDomain || person.domain == this.selectedDomain) &&
+        (!this.selectedGender || person.gender == this.selectedGender) &&
+        (!this.availabilityFilter ||
+          person.available == this.availabilityFilter)
+      );
+    });
+    this.updateFilteredData(this.filteredUserData);
   }
 
-  private updatePaginationData() {
-    this.filteredUserdata = this.userdata[this.index];
-    this.paginationUserdata = this.userdata[this.index];
-    this.length = this.userService.length;
-    this.paginationLength = this.userService.length / 20;
+  private updateFilteredData(filteredData: user[]) {
+    this.paginationUserdata = filteredData.slice(
+      this.index,
+      this.index + this.itemsPerPage
+    );
+    this.length = filteredData.length;
+    this.paginationLength = this.paginationUserdata.length;
+  }
+
+  updatePaginationData() {
+    const startIndex = this.index * this.itemsPerPage;
+    this.paginationUserdata = this.userdata.slice(
+      startIndex,
+      startIndex + this.itemsPerPage
+    );
+    this.paginationLength = this.paginationUserdata.length;
   }
 }
