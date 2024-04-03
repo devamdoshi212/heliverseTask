@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
     this.userService.fetchUserData().subscribe((data: user[]) => {
       this.domains = this.userService.domains;
       this.genders = this.userService.genders;
+      console.log(this.genders);
       this.userdata = data;
       this.filter();
     });
