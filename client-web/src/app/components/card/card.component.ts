@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { user } from '../../model/user.model';
 import { faMale } from '@fortawesome/free-solid-svg-icons';
 import { faFemale } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +16,7 @@ import { UserService } from '../../services/user.service';
   selector: 'app-card',
   templateUrl: './card.component.html',
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements AfterViewInit {
   @Input()
   userdata!: user;
 
@@ -29,10 +36,12 @@ export class CardComponent implements OnInit {
   @Input()
   flag: boolean = false;
 
-  ngOnInit(): void {}
-  constructor(private userService: UserService) {
-    this.checkTeamMember();
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.valid) this.checkTeamMember();
+    }, 1);
   }
+  constructor(private userService: UserService) {}
   setIcon(gender: any) {
     if (gender === 'Male') {
       return this.male;
@@ -65,14 +74,9 @@ export class CardComponent implements OnInit {
   }
 
   checkTeamMember() {
-    this.userService.teamData.forEach((e) => {
-      if (e == this.userdata) {
-        this.valid = false;
-        console.log(this.valid);
-        return;
-      }
-    });
-
-    this.valid = true;
+    this.valid =
+      this.userService.teamData.filter(
+        (person) => person.id == this.userdata.id
+      ).length == 0;
   }
 }

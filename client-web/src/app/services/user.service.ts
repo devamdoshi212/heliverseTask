@@ -37,7 +37,6 @@ export class UserService {
 
   addTeamMember(member: user) {
     this.teamData.push(member);
-    console.log(this.teamData);
   }
   removeTeamMember(member: user) {}
 }

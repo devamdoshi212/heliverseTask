@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   searchKeyword: string = '';
   availabilityFilter: any = '';
   selectedDomain: string = '';
+  selectedAvailability: boolean = false;
   selectedGender: string = '';
   showError: boolean = false;
   error: string = '';
@@ -33,7 +34,6 @@ export class HomeComponent implements OnInit {
     this.userService.fetchUserData().subscribe((data: user[]) => {
       this.domains = this.userService.domains;
       this.genders = this.userService.genders;
-      console.log(this.genders);
       this.userdata = data;
       this.filter();
     });
@@ -65,7 +65,11 @@ export class HomeComponent implements OnInit {
   }
 
   filter() {
-    console.log(this.availabilityFilter);
+    if (this.availabilityFilter == 'available')
+      this.selectedAvailability = true;
+    if (this.availabilityFilter == 'not-available')
+      this.selectedAvailability = false;
+
     this.index = 0;
     this.filteredUserData = this.userdata.filter((person: any) => {
       return (
@@ -74,7 +78,7 @@ export class HomeComponent implements OnInit {
         (!this.selectedDomain || person.domain == this.selectedDomain) &&
         (!this.selectedGender || person.gender == this.selectedGender) &&
         (!this.availabilityFilter ||
-          person.available == this.availabilityFilter)
+          person.available == this.selectedAvailability)
       );
     });
     this.updateFilteredData(this.filteredUserData);
